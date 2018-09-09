@@ -23,7 +23,7 @@ type SubCategory struct {
 }
 
 func (s SubCategory) String() string {
-	return fmt.Sprintf("%s\n", s.Title)
+	return fmt.Sprintf("%s [%s]\n", s.Title, s.Key)
 }
 
 type Field struct {

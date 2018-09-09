@@ -25,7 +25,10 @@ func Test_FormMarshall(t *testing.T) {
 	for ic, c := range myForm.Categories {
 		t.Logf("%d: %s [%s]\n", ic, c.Title, c.Key)
 		for isc, s := range c.SubCategories {
-			t.Logf("\t%d-%d: %s\n", ic, isc, s.String())
+			t.Logf("\t%d-%d: %s", ic, isc, s.String())
+			for ifield, field := range s.Fields {
+				t.Logf("\t\t%d-%d-%d: %s [%s]", ic, isc, ifield, field.Label, field.Ref)
+			}
 		}
 	}
 
