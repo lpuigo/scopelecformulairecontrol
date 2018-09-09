@@ -1,0 +1,414 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "TemplateDefinition.json",
+  "description": "Décrit un modèle de formulaire",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Categories": {
+      "type": "array",
+      "description": "Liste des catégories",
+      "items": {
+        "$ref": "#/definitions/Category"
+      }
+    },
+    "ValidationRules": {
+      "type": "array",
+      "description": "Liste des règles validations globales",
+      "items": {
+        "$ref": "#/definitions/ValidationRuleDefinition"
+      }
+    }
+  },
+  "definitions": {
+    "Category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "Key", "Title", "SubCategories" ],
+      "properties": {
+        "Key": {
+          "type": "string",
+          "description": "Clé permettant d'identifier un écran dynamique de l'application mobile à afficher pour cette catégorie"
+        },
+        "Title": {
+          "type": "string",
+          "description": "Titre de la catégorie à afficher dans les onglets"
+        },
+        "SubCategories": {
+          "type": "array",
+          "description": "Liste des sous-catégories",
+          "items": {
+            "$ref": "#/definitions/SubCategory"
+          }
+        }
+      }
+    },
+    "SubCategory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "Title", "Fields" ],
+      "properties": {
+        "Title": {
+          "type": "string",
+          "description": "Titre de la sous-catégorie à afficher dans les onglets"
+        },
+        "Visibility": {
+          "$ref": "#/definitions/Visibility",
+          "description": "Règle de visibilité permettant d'afficher/masquer la sous-catégorie"
+        },
+        "Fields": {
+          "type": "array",
+          "description": "Liste des champs de cette sous-catégorie",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        }
+      }
+    },
+    "Visibility": {
+      "$ref": "#/definitions/JsExprBool"
+    },
+    "Field": {
+      "type": "object",
+      "description": "Description d'un champ",
+      "additionalProperties": false,
+      "required": [
+        "Type",
+        "IsReadonly"
+      ],
+      "properties": {
+        "Ref": {
+          "type": "string",
+          "description": "Référence permettant d'identifier un champ"
+        },
+        "Type": {
+          "$ref": "#/definitions/FieldType",
+          "description": "Type du champ"
+        },
+        "Label": {
+          "type": "string",
+          "description": "Libellé associé au champ"
+        },
+        "Label2": {
+          "type": "string",
+          "description": "Libellé associé au champ (utilisé pour certains champs)"
+        },
+        "Label3": {
+          "type": "string",
+          "description": "Libellé associé au champ  (utilisé pour certains champs)"
+        },
+        "Href": {
+          "type": "string",
+          "description": "Lien hypertext pour les champs de type link ou linkAppli"
+        },
+        "IsMandatory": {
+          "type": "boolean",
+          "description": "Interdit que le champ soit vide (affiche une *)"
+        },
+        "IsMandatoryExpr": {
+          "$ref":  "#/definitions/JsExprBool",
+          "description": "Idem, mais sur la base d'une expression à évaluer"
+        },
+        "IsReadonly": {
+          "type": "boolean",
+          "description": "Le champ n'est pas modifiable"
+        },
+        "Tooltip": {
+          "type": "string",
+          "description": "Affiche un \"?\" en bout de ligne et affiche le contenu dans un tooltip au click du \"?\"\""
+        },
+        "Placeholder": {
+          "type": "string",
+          "description": "Valeur affiché par défaut (valable que pour les champs libres de type text)"
+        },
+        "Visibility": {
+          "$ref": "#/definitions/Visibility",
+          "description": "Règle de visibilité permettant d'afficher/masquer le champ"
+        },
+        "MessErrRequired": {
+          "type": "string",
+          "description": "Message d'erreur affiché si le champ est vide"
+        },
+        "Regexp": {
+          "type": "string",
+          "description": "Règle de validation des champs texte sous forme d'expression régulière"
+        },
+        "MessErrRegexp": {
+          "type": "string",
+          "description": "Message d'erreur affiché si le champ ne respecte pas Regexp"
+        },
+        "SectionTitle": {
+          "type": "string",
+          "description": "Affiche un titre au dessus d'un champ. La règle de visibilité n'affecte pas le titre de la section."
+        },
+        "OptionList": {
+          "type": "array",
+          "description": "Pour les types choix, dresse la liste des choix possibles",
+          "items": {
+            "$ref": "#/definitions/GroupChoiceDefinition"
+          }
+        },
+        "CascadeOptionList": {
+          "type": "array",
+          "description": "Pour les types choix dans les listes en cascade, dresse la liste des choix possibles",
+          "items": {
+            "$ref": "#/definitions/CascadeChoiceDefinition"
+          }
+        },
+        "Fields": {
+          "$ref": "#/definitions/OptionArrayDefinition",
+          "description": "Pour le type itemlist, dresse la liste des champs groupés et répétables"
+        },
+        "MaxItem": {
+          "type": "integer",
+          "description": "Nombre maximum d'élément dans le groupe de champs itemlist"
+        },
+        "MinLevel": {
+          "type": "integer",
+          "description": "niveau technicien minimum inclus nécessaire pour voir le champs "
+        },
+        "MaxLevel": {
+          "type": "integer",
+          "description": "niveau technicien minimum inclus nécessaire pour voir le champs "
+        },
+        "DefaultValue": {
+          "$ref": "#/definitions/DefaultValueDefinition",
+          "description": "Valeur par défaut du champ (non géré par le moteur de rendu)"
+        },
+        "Quality": {
+          "$ref": "#/definitions/QualityDefinition",
+          "description": "Information de classification qualité du champ (non géré par le moteur de rendu)"
+        },
+        "PidiLineTestType": {
+          "$ref": "#/definitions/LineTestTypeArrayDefinition",
+          "description": "Permet de sélectionner les essais mis à disposition"
+        },
+        "CatalogServiceFilter": {
+          "$ref": "#/definitions/CatalogServiceFilterDefinition",
+          "description": "Concerne le type catalogInput. Valeur du filtre affecté par défaut (code famille de prestation)"
+        },
+        "CatalogMaterialFilter": {
+          "$ref": "#/definitions/CatalogMaterialFilterDefinition",
+          "description": "Concerne le type catalogInput. Valeur du filtre affecté par défaut (code famille de matériel)"
+        },
+        "CatalogPriceDisplay": {
+          "$ref": "#/definitions/CatalogPriceDisplayDefinition",
+          "description": "Concerne le type catalogInput. Permet d'indiquer si les prix totaux sont affichés dans le composant côté application mobile"
+        },
+        "CatalogSummary": {
+          "$ref": "#/definitions/CatalogSummaryDefinition",
+          "description": "Concerne le type catalogInput. Permet d'indiquer la référence des champs dont on souhaite faire le résumé"
+        }
+      }
+    },
+    "OptionArrayDefinition": {
+      "type": "array",
+      "description": "Pour le type tableau de champ, dresse la liste des champs",
+      "items": {
+        "$ref": "#/definitions/Field"
+      }
+    },
+    "GroupChoiceDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Choices"
+      ],
+      "properties": {
+        "Visibility": {
+          "$ref": "#/definitions/Visibility"
+        },
+        "Choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChoiceDefinition"
+          }
+        }
+      }
+    },
+    "ChoiceDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Value",
+        "Display"
+      ],
+      "properties": {
+        "Value": {
+          "type": "string"
+        },
+        "Display": {
+          "type": "string"
+        }
+      }
+    },
+    "CascadeChoiceDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Value",
+        "Display"
+      ],
+      "properties": {
+        "Value": {
+          "type": "string"
+        },
+        "Display": {
+          "type": "string"
+        },
+        "Items": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "DefaultValueDefinition": {
+      "type": "object",
+      "description": "Description d'une valeur par défaut. Une seule valeur possible (oneOf pas supporté par swagger v2).",
+      "additionalProperties": false,
+      "properties": {
+        "Static": {
+          "additionalProperties": true,
+          "description": "Valeur en dur dans le format attendu par le type du champ"
+        },
+        "OriginatorWorkOrderQuery": {
+          "type": "string",
+          "description": "Requête xpath 1.0 appliqué sur l'OT brut provenant du canal donneur d'ordre"
+        },
+        "WorkOrderQuery": {
+          "type": "string",
+          "description": "Requête jsonpath appliqué sur l'OT Planning. Voir le format de l'objet retourné par ApiWorkOrderByIdGetAsync"
+        }
+      }
+    },
+    "QualityDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "Ref" ],
+      "properties": {
+        "Ref": {
+          "type": "string"
+        }
+      }
+    },
+    "LineTestTypeArrayDefinition": {
+      "description": "Liste des types d'essai disponibles",
+      "type": "array",
+      "items": {
+        "$ref":  "#/definitions/LineTestTypeDefinition"
+      }
+    },
+    "LineTestTypeDefinition": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        8,
+        18,
+        19,
+        70,
+        100,
+        101,
+        102,
+        103
+      ]
+    },
+    "LineTestOperatorDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Value": {
+          "description": "N° SIREN de l'opérateur",
+          "type": "string"
+        },
+        "Label": {
+          "description": "Identité de l'opérateur (prénom + nom)",
+          "type": "string"
+        }
+      }
+    },
+    "LineTestOperatorArrayDefinition": {
+      "description": "Dictionnaire des opérateurs",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LineTestOperatorDefinition"
+      }
+    },
+    "CatalogServiceFilterDefinition": {
+      "type": "string"
+    },
+    "CatalogMaterialFilterDefinition": {
+      "type": "string"
+    },
+    "CatalogPriceDisplayDefinition": {
+      "type": "boolean"
+    },
+    "CatalogSummaryDefinition": {
+      "type": "array",
+      "description": "Liste de références",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ValidationRuleDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Rule",
+        "ErrorMessage",
+        "RedirectField"
+      ],
+      "properties": {
+        "Rule": {
+          "$ref": "#/definitions/JsExprBool",
+          "description": "La règle métier à vérifier"
+        },
+        "ErrorMessage": {
+          "type": "string",
+          "description": "Message d'erreur à afficher en cas de règle non vérifiée"
+        },
+        "RedirectField": {
+          "type": "string",
+          "description": "Champ du formulaire vers lequel rediriger l'utilisateur en cas d'erreur"
+        }
+      }
+    },
+    "FieldType": {
+      "type": "string",
+      "enum": [
+        "address",
+        "booleanInput",
+        "cascadeChoice",
+        "dateInput",
+        "dateTimeInput",
+        "gpsInput",
+        "itemList",
+        "link",
+        "linkAppli",
+        "mailInput",
+        "multipleChoice",
+        "numInput",
+        "photoInput",
+        "pjInput",
+        "qrcodeInput",
+        "signatureInput",
+        "singleChoice",
+        "singleInput",
+        "telInput",
+        "text",
+        "timeInput",
+        "pidiLineTestsInput",
+        "catalogInput",
+        "tamTestsInput"
+      ]
+    },
+    "JsExprBool": {
+      "type": "string",
+      "description": "Expression javascript d'une condition booléenne. Il est possible de référencer un champ en encadrant sa ref par des crochets. Ex [monchamp] == 'test'"
+    }
+  }
+}
