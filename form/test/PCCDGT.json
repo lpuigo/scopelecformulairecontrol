@@ -1,0 +1,1888 @@
+{
+	"Categories": [{
+		"Key": "PCC_CPC_DGT",
+		"Title": "PCC_CPC_DGT",
+		"SubCategories": [{
+			"Title": "CRI",
+			"Fields": [{
+				"Ref": "PIDI_ot_activite",
+				"Type": "singleInput",
+				"Label": "Activite PIDI",
+				"IsMandatory": false,
+				"IsReadonly": true,
+				"DefaultValue": {
+					"OriginatorWorkOrderQuery": "substring(pidi:OT/B_Interv/I_Interv/Refint,1,3)"
+				}
+			},
+			{
+				"Ref": "PIDI_ot_produit",
+				"Type": "singleInput",
+				"Label": "Produit PIDI",
+				"IsMandatory": false,
+				"IsReadonly": true,
+				"DefaultValue": {
+					"OriginatorWorkOrderQuery": "substring(pidi:OT/B_Interv/I_Interv/Refint,4,3)"
+				}
+			},
+			{
+				"Ref": "ClosingReason",
+				"Type": "singleChoice",
+				"Label": "Etat de l'intervention",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Choisir l'état de l'intervention",
+				"SectionTitle": "INTERVENTION",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "OKPIDI",
+						"Display": "Intervention OK"
+					},
+					{
+						"Value": "REPLANIF",
+						"Display": "Saisir un aléas et replanifier"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_dateHeureDebut",
+				"Type": "dateTimeInput",
+				"Label": "Date et heure de début",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'OKPIDI' || [ClosingReason] == 'REPLANIF'"
+			},
+			{
+				"Ref": "PIDI_cri_dateheureFin",
+				"Type": "dateTimeInput",
+				"Label": "Date et heure de fin",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'OKPIDI' || [ClosingReason] == 'REPLANIF'"
+			},
+			{
+				"Ref": "rdvExistant",
+				"Type": "booleanInput",
+				"Label": "Aviez-vous un RDV client?",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_cri_rdvRespect",
+				"Type": "booleanInput",
+				"Label": "Avez-vous respecté le RDV?",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[rdvExistant] == true"
+			},
+			{
+				"Ref": "PIDI_testBd",
+				"Type": "pidiLineTestsInput",
+				"Label": "Essai Bas Débit",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"SectionTitle": "TESTS",
+				"PidiLineTestType": [6]
+			},
+			{
+				"Ref": "PIDI_cri_resultatBD",
+				"Type": "singleInput",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_testHd",
+				"Type": "pidiLineTestsInput",
+				"Label": "Essai Haut Débit",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"PidiLineTestType": [0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				8,
+				70]
+			},
+			{
+				"Ref": "PIDI_CRI_resultatHD",
+				"Type": "singleInput",
+				"Label": "Résultat test HD",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_cri_typeEssai",
+				"Type": "singleChoice",
+				"Label": "Essai",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Choisir le résultat de l'essai",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "1",
+						"Display": "1: MELODI HS"
+					},
+					{
+						"Value": "2",
+						"Display": "2: MELODI NOK"
+					},
+					{
+						"Value": "3",
+						"Display": "3: MELODI OK"
+					},
+					{
+						"Value": "4",
+						"Display": "4: AFFAIBL OK"
+					},
+					{
+						"Value": "5",
+						"Display": "5: AFFAIBL NOK"
+					},
+					{
+						"Value": "6",
+						"Display": "6: PAS D'ESSAI"
+					},
+					{
+						"Value": "7",
+						"Display": "7: DSLAM"
+					},
+					{
+						"Value": "8",
+						"Display": "8: Ignorer DAE"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_defautEssaiRepare",
+				"Type": "singleChoice",
+				"Label": "Défaut réparé ?",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "Oui",
+						"Display": "Oui"
+					},
+					{
+						"Value": "Non",
+						"Display": "Non"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_idJustificationBasDebit",
+				"Type": "singleChoice",
+				"Label": "Justification",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_defautEssaiRepare] == 'Oui'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "1",
+						"Display": "1: Mesure incohérente"
+					},
+					{
+						"Value": "2",
+						"Display": "2: Défaut résiduel-sce HD OK"
+					},
+					{
+						"Value": "4",
+						"Display": "4: Défaut résiduel-QRL CA"
+					},
+					{
+						"Value": "7",
+						"Display": "7: Robot HS"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_testTAM",
+				"Type": "pidiLineTestsInput",
+				"Label": "consulter TAM",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"PidiLineTestType": [100,
+				101,
+				102,
+				103]
+			},
+			{
+				"Ref": "PIDI_cri_accesMOBI",
+				"Type": "linkAppli",
+				"Label": "Accès MOBI",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Lance l'application MOBI"
+			},
+			{
+				"Ref": "PIDI_cri_changementAdressePc",
+				"Type": "booleanInput",
+				"Label": "Changement Adresse Pc",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Cocher s'il y a une changement d'adresse du PC",
+				"SectionTitle": "QUESTIONNAIRE"
+			},
+			{
+				"Ref": "PIDI_cri_commentaireChangementAdressePc",
+				"Type": "singleInput",
+				"Label": "Nouvelle Adresse PC",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_changementAdressePc] == true"
+			},
+			{
+				"Ref": "PIDI_cri_changementConstitution",
+				"Type": "booleanInput",
+				"Label": "Changement constitution",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Cocher s'il y a un changement de constitution"
+			},
+			{
+				"Ref": "PIDI_cri_commentaireChangementConstitution",
+				"Type": "singleInput",
+				"Label": "Nouvelle constitution",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_changementConstitution] == true"
+			},
+			{
+				"Ref": "PIDI_cri_DTIApresInter",
+				"Type": "booleanInput",
+				"Label": "DTI posé ?",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_cri_otConforme",
+				"Type": "booleanInput",
+				"Label": "OT conforme",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Cocher si l'OT est conforme"
+			},
+			{
+				"Ref": "PIDI_cri_indPrestFact",
+				"Type": "booleanInput",
+				"Label": "Prestation facturée",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Cocher si vous avez facturé une prestation"
+			},
+			{
+				"Ref": "PIDI_cri_codeCause",
+				"Type": "singleChoice",
+				"Label": "Code responsabilité",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Choisir le code responsabilité",
+				"SectionTitle": "RESPONSABILITE",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "FTO",
+						"Display": "FTO : Charge d'Orange"
+					},
+					{
+						"Value": "DOM",
+						"Display": "DOM : Charge tiers qui endommage le réseau"
+					},
+					{
+						"Value": "CLI",
+						"Display": "CLI : Charge client"
+					},
+					{
+						"Value": "OPT",
+						"Display": "OPT : Charge opérateur tiers"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_codeIntervention",
+				"Type": "singleChoice",
+				"Label": "Code intervention",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'OKPIDI'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "ABS",
+						"Display": "ABS : Client absent"
+					},
+					{
+						"Value": "DIP",
+						"Display": "DIP : Installation privative KO"
+					},
+					{
+						"Value": "DOP",
+						"Display": "DOP : Eqpt Opérateur  KO"
+					},
+					{
+						"Value": "FIA",
+						"Display": "FIA : Fiabilisation de ligne"
+					},
+					{
+						"Value": "ICI",
+						"Display": "ICI : Installation client inaccessible"
+					},
+					{
+						"Value": "INL",
+						"Display": "INL : Inéligibilité ADSL"
+					},
+					{
+						"Value": "IPR",
+						"Display": "IPR : Inéligibilité pour cause de perturbateur électromagnétique"
+					},
+					{
+						"Value": "PAD",
+						"Display": "PAD : Problème Adresse erronée"
+					},
+					{
+						"Value": "RMC",
+						"Display": "RMC : Rendez-vous manqué par client"
+					},
+					{
+						"Value": "RME",
+						"Display": "RME : RDV manqué FT pour expertise et SAV+"
+					}]
+				},
+				{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DEF",
+						"Display": "DEF : Relève en définitif"
+					},
+					{
+						"Value": "PDC",
+						"Display": "PDC : Pas de défaut constaté"
+					},
+					{
+						"Value": "PRO",
+						"Display": "PRO : Relève en provisoire"
+					},
+					{
+						"Value": "REO",
+						"Display": "REO : Réorientation"
+					},
+					{
+						"Value": "TVC",
+						"Display": "TVC : Travaux à la charge du client"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_codeLieu",
+				"Type": "singleChoice",
+				"Label": "Code lieu",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_codeIntervention] = 'DEF' || [PIDI_cri_codeIntervention] = 'DIP' || [PIDI_cri_codeIntervention] = 'PRO' || [PIDI_cri_codeIntervention] = 'TOK' || [PIDI_cri_codeIntervention] = 'FIA'",
+				"OptionList": [{
+					"Visibility": "[PIDI_cri_codeIntervention] = 'DEF'",
+					"Choices": [{
+						"Value": "AU",
+						"Display": "Autocommutateur"
+					},
+					{
+						"Value": "BR",
+						"Display": "Branchement"
+					},
+					{
+						"Value": "DI",
+						"Display": "Distribution"
+					},
+					{
+						"Value": "ET",
+						"Display": "Environnement technique"
+					},
+					{
+						"Value": "GC",
+						"Display": "Génie Civil"
+					},
+					{
+						"Value": "HH",
+						"Display": "Renvoie NRA HD"
+					},
+					{
+						"Value": "IN",
+						"Display": "Installation"
+					},
+					{
+						"Value": "IP",
+						"Display": "IP / ATM / ADSL"
+					},
+					{
+						"Value": "MO",
+						"Display": "Mobilier publiphone"
+					},
+					{
+						"Value": "OR",
+						"Display": "Mobiles"
+					},
+					{
+						"Value": "PB",
+						"Display": "Point branchement"
+					},
+					{
+						"Value": "PC",
+						"Display": "PC"
+					},
+					{
+						"Value": "PM",
+						"Display": "Point de Mutualisation"
+					},
+					{
+						"Value": "PR",
+						"Display": "Perturbateur"
+					},
+					{
+						"Value": "RE",
+						"Display": "Repartiteur"
+					},
+					{
+						"Value": "RL",
+						"Display": "Réseau Local"
+					},
+					{
+						"Value": "RO",
+						"Display": "Noeud de raccordement optique"
+					},
+					{
+						"Value": "SR",
+						"Display": "Sous-Répartition"
+					},
+					{
+						"Value": "SV",
+						"Display": "Serveur plateforme"
+					},
+					{
+						"Value": "TE",
+						"Display": "Terminal (poste.PABX.Pub...)"
+					},
+					{
+						"Value": "TR",
+						"Display": "Transport"
+					},
+					{
+						"Value": "TS",
+						"Display": "Transmission"
+					},
+					{
+						"Value": "UR",
+						"Display": "Unité raccordement publiphone"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeIntervention] = 'DIP'",
+					"Choices": [{
+						"Value": "BR",
+						"Display": "Branchement"
+					},
+					{
+						"Value": "DI",
+						"Display": "Distribution"
+					},
+					{
+						"Value": "ET",
+						"Display": "Environnement technique"
+					},
+					{
+						"Value": "IN",
+						"Display": "Installation"
+					},
+					{
+						"Value": "IP",
+						"Display": "IP / ATM / ADSL"
+					},
+					{
+						"Value": "OR",
+						"Display": "Mobiles"
+					},
+					{
+						"Value": "PR",
+						"Display": "Perturbateur"
+					},
+					{
+						"Value": "TE",
+						"Display": "Terminal (poste.PABX.Pub...)"
+					},
+					{
+						"Value": "TS",
+						"Display": "Transmission"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeIntervention] = 'FIA'",
+					"Choices": [{
+						"Value": "AU",
+						"Display": "Autocommutateur"
+					},
+					{
+						"Value": "BR",
+						"Display": "Branchement"
+					},
+					{
+						"Value": "DI",
+						"Display": "Distribution"
+					},
+					{
+						"Value": "ET",
+						"Display": "Environnement technique"
+					},
+					{
+						"Value": "GC",
+						"Display": "Génie Civil"
+					},
+					{
+						"Value": "HH",
+						"Display": "Renvoie NRA HD"
+					},
+					{
+						"Value": "IN",
+						"Display": "Installation"
+					},
+					{
+						"Value": "IP",
+						"Display": "IP / ATM / ADSL"
+					},
+					{
+						"Value": "MO",
+						"Display": "Mobilier publiphone"
+					},
+					{
+						"Value": "OR",
+						"Display": "Mobiles"
+					},
+					{
+						"Value": "PB",
+						"Display": "Point branchement"
+					},
+					{
+						"Value": "PC",
+						"Display": "PC"
+					},
+					{
+						"Value": "PR",
+						"Display": "Perturbateur"
+					},
+					{
+						"Value": "RE",
+						"Display": "Repartiteur"
+					},
+					{
+						"Value": "RL",
+						"Display": "Réseau Local"
+					},
+					{
+						"Value": "RO",
+						"Display": "Noeud de raccordement optique"
+					},
+					{
+						"Value": "SR",
+						"Display": "Sous-Répartition"
+					},
+					{
+						"Value": "SV",
+						"Display": "Serveur plateforme"
+					},
+					{
+						"Value": "TE",
+						"Display": "Terminal (poste.PABX.Pub...)"
+					},
+					{
+						"Value": "TR",
+						"Display": "Transport"
+					},
+					{
+						"Value": "TS",
+						"Display": "Transmission"
+					},
+					{
+						"Value": "UR",
+						"Display": "Unité raccordement publiphone"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeIntervention] = 'PRO'",
+					"Choices": [{
+						"Value": "AU",
+						"Display": "Autocommutateur"
+					},
+					{
+						"Value": "BR",
+						"Display": "Branchement"
+					},
+					{
+						"Value": "DI",
+						"Display": "Distribution"
+					},
+					{
+						"Value": "ET",
+						"Display": "Environnement technique"
+					},
+					{
+						"Value": "GC",
+						"Display": "Génie Civil"
+					},
+					{
+						"Value": "HH",
+						"Display": "Renvoie NRA HD"
+					},
+					{
+						"Value": "IN",
+						"Display": "Installation"
+					},
+					{
+						"Value": "IP",
+						"Display": "IP / ATM / ADSL"
+					},
+					{
+						"Value": "MO",
+						"Display": "Mobilier publiphone"
+					},
+					{
+						"Value": "OR",
+						"Display": "Mobiles"
+					},
+					{
+						"Value": "PB",
+						"Display": "Point branchement"
+					},
+					{
+						"Value": "PC",
+						"Display": "PC"
+					},
+					{
+						"Value": "PM",
+						"Display": "Point de Mutualisation"
+					},
+					{
+						"Value": "RE",
+						"Display": "Repartiteur"
+					},
+					{
+						"Value": "RL",
+						"Display": "Réseau Local"
+					},
+					{
+						"Value": "RO",
+						"Display": "Noeud de raccordement optique"
+					},
+					{
+						"Value": "SR",
+						"Display": "Sous-Répartition"
+					},
+					{
+						"Value": "SV",
+						"Display": "Serveur plateforme"
+					},
+					{
+						"Value": "TE",
+						"Display": "Terminal (poste.PABX.Pub...)"
+					},
+					{
+						"Value": "TR",
+						"Display": "Transport"
+					},
+					{
+						"Value": "TS",
+						"Display": "Transmission"
+					},
+					{
+						"Value": "UR",
+						"Display": "Unité raccordement publiphone"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeIntervention] = 'TOK'",
+					"Choices": [{
+						"Value": "AU",
+						"Display": "Autocommutateur"
+					},
+					{
+						"Value": "BR",
+						"Display": "Branchement"
+					},
+					{
+						"Value": "DI",
+						"Display": "Distribution"
+					},
+					{
+						"Value": "IN",
+						"Display": "Installation"
+					},
+					{
+						"Value": "PC",
+						"Display": "PC"
+					},
+					{
+						"Value": "SR",
+						"Display": "Sous-Répartition"
+					},
+					{
+						"Value": "SV",
+						"Display": "Serveur plateforme"
+					},
+					{
+						"Value": "TE",
+						"Display": "Terminal (poste.PABX.Pub...)"
+					},
+					{
+						"Value": "TR",
+						"Display": "Transport"
+					},
+					{
+						"Value": "UR",
+						"Display": "Unité raccordement publiphone"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_codeEquipement",
+				"Type": "singleChoice",
+				"Label": "Equipement",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_codeLieu] != ''",
+				"OptionList": [{
+					"Visibility": "[PIDI_cri_codeLieu] == 'BR'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "BRABO",
+						"Display": "BRABO: Branche abonné"
+					},
+					{
+						"Value": "DESCAB",
+						"Display": "DESCAB: Desserte câblée"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'DI'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DIVERS",
+						"Display": "DIVERS: Divers (en replacement des codes supprimés)"
+					},
+					{
+						"Value": "MUTDI",
+						"Display": "MUTDI: Mutation distribution"
+					},
+					{
+						"Value": "MUTHS",
+						"Display": "MUTHS: Mutation sans amélioration du débit"
+					},
+					{
+						"Value": "SAT",
+						"Display": "SAT: Impossibilité de muter du fait saturation"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'GC'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "AIGUIL",
+						"Display": "AIGUIL: Aiguillage"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'HH'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DIVERS",
+						"Display": "DIVERS: Divers (en replacement des codes supprimés)"
+					},
+					{
+						"Value": "MUSLHH",
+						"Display": "MUSLHH: Mutation plot DSL"
+					},
+					{
+						"Value": "MUTHH",
+						"Display": "MUTHH: Mutation Transport NRAHD"
+					},
+					{
+						"Value": "MUTHS",
+						"Display": "MUTHS: Mutation sans amélioration du débit"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'IN'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "CABINT",
+						"Display": "CABINT: Câblage intérieur"
+					},
+					{
+						"Value": "DTI",
+						"Display": "DTI: Dispositif Terminal d'Installation"
+					},
+					{
+						"Value": "ONT",
+						"Display": "ONT: Optical Network Terminal"
+					},
+					{
+						"Value": "PTO",
+						"Display": "PTO: Prise Terminal Optique"
+					},
+					{
+						"Value": "TNR",
+						"Display": "TNR: TNR"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'MO'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "ACC",
+						"Display": "ACC: Accessoires"
+					},
+					{
+						"Value": "DEP",
+						"Display": "DEP: Défaut électrique public"
+					},
+					{
+						"Value": "ECL",
+						"Display": "ECL: Eclairage"
+					},
+					{
+						"Value": "MEPOR",
+						"Display": "MEPOR: Mecanisme Porte"
+					},
+					{
+						"Value": "MOB",
+						"Display": "MOB: Mobilier"
+					},
+					{
+						"Value": "PIED",
+						"Display": "PIED: Pied"
+					},
+					{
+						"Value": "PLAN",
+						"Display": "PLAN: Plancher"
+					},
+					{
+						"Value": "PORTE",
+						"Display": "PORTE: Porte"
+					},
+					{
+						"Value": "VITRE",
+						"Display": "VITRE: Vitre"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'PM'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "Pm",
+						"Display": "PM: Point Mutualisation"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'PR'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "PERTU",
+						"Display": "PERTU: Pertubateur"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'RE'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DIVERS",
+						"Display": "DIVERS: Divers (en remplacement des codes supprimés)"
+					},
+					{
+						"Value": "MUTNE",
+						"Display": "MUTNE: Mutation NE"
+					},
+					{
+						"Value": "MUTDSL",
+						"Display": "MUTDSL: Mutation plot ADSL"
+					},
+					{
+						"Value": "MUTHS",
+						"Display": "MUTHS: Mutation sans amélioration du débit"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'RL'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "FWALL",
+						"Display": "FWALL: Firewall"
+					},
+					{
+						"Value": "SWITCH",
+						"Display": "SWITCH: Switch"
+					},
+					{
+						"Value": "WIFI",
+						"Display": "WIFI: Wifi"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'TE'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DECOD",
+						"Display": "DECOD: Décodeur"
+					},
+					{
+						"Value": "EAS",
+						"Display": "EAS: Equipement d'Accès aux Services"
+					},
+					{
+						"Value": "EQCLI",
+						"Display": "EQCLI: Equipement Client"
+					},
+					{
+						"Value": "LIVSCE",
+						"Display": "LIVSCE: Liveservice-objets connectés: plug, homelive"
+					},
+					{
+						"Value": "PBX",
+						"Display": "PBX: PBX"
+					},
+					{
+						"Value": "RTEUR",
+						"Display": "RTEUR: Livebox, Modem, Routeur"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'TR'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "DIVERS",
+						"Display": "DIVERS: Divers (en remplacement des codes supprimés)"
+					},
+					{
+						"Value": "MUTTR",
+						"Display": "MUTTR: Mutation Transport"
+					},
+					{
+						"Value": "MUTHS",
+						"Display": "MUTHS: Mutation sans amélioration du débit"
+					},
+					{
+						"Value": "PE",
+						"Display": "PE: Point d'Eclatement"
+					},
+					{
+						"Value": "SAT",
+						"Display": "SAT: Impossibilité de muter du fait saturation"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_codeLieu] == 'UR'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "ALIM",
+						"Display": "ALIM: Carte alimentation"
+					},
+					{
+						"Value": "ASDIV",
+						"Display": "ASDIV: Serveurs 361 etc."
+					},
+					{
+						"Value": "COND",
+						"Display": "COND: Carte Onduleur"
+					},
+					{
+						"Value": "CV12V",
+						"Display": "CV12V: Carte Onduleur"
+					},
+					{
+						"Value": "CV15M",
+						"Display": "CV15M: Carte de voie CV15VMN UR2G"
+					},
+					{
+						"Value": "Cv15U",
+						"Display": "Cv15U: Carte de voie CV15VUN"
+					},
+					{
+						"Value": "CV8",
+						"Display": "CV8: Carte voie C8V UR1G"
+					},
+					{
+						"Value": "CVTC",
+						"Display": "CVTC: Carte de voie TC"
+					},
+					{
+						"Value": "CX25",
+						"Display": "CX25: Coupleur X25 (OSI5 etc.)"
+					},
+					{
+						"Value": "MEMSEC",
+						"Display": "MEMSEC: Carte Memsec"
+					},
+					{
+						"Value": "MICT2",
+						"Display": "MICT2: Defaut MICT2"
+					},
+					{
+						"Value": "MTS",
+						"Display": "MTS: UR2G change MTS"
+					},
+					{
+						"Value": "MUC",
+						"Display": "MUC: Carte MUC MONETEL"
+					},
+					{
+						"Value": "RACMR",
+						"Display": "RACMR: Rack MR"
+					},
+					{
+						"Value": "RACUR",
+						"Display": "RACUR: Rack UR"
+					},
+					{
+						"Value": "UCMIC",
+						"Display": "UCMIC: Carte MIC"
+					},
+					{
+						"Value": "URD",
+						"Display": "URD: unité de raccordement decentralisée"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_CRI_savpluscontradictoire",
+				"Type": "booleanInput",
+				"Label": "SAV+ contradictoire ?",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"SectionTitle": "SAV+ CONTRADICTOIRE"
+			},
+			{
+				"Ref": "PIDI_CRI_techOPTvuClient",
+				"Type": "singleChoice",
+				"Label": "Technicien OPT vu par le client ?",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "O",
+						"Display": "O: Oui"
+					},
+					{
+						"Value": "N",
+						"Display": "N: Non"
+					},
+					{
+						"Value": "I",
+						"Display": "I: NSP"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_CRI_presenceModuleRCdti",
+				"Type": "singleChoice",
+				"Label": "Présence du module RC dans le DTI ?",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "O",
+						"Display": "O: Oui"
+					},
+					{
+						"Value": "N",
+						"Display": "N: Non"
+					},
+					{
+						"Value": "I",
+						"Display": "I: NSP"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_commentaireReleve",
+				"Type": "text",
+				"Label": "Commentaire intervention",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'OKPIDI'"
+			},
+			{
+				"Ref": "PIDI_cri_PVetabli",
+				"Type": "booleanInput",
+				"Label": "PV établi ?",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"SectionTitle": "PV ETABLI"
+			},
+			{
+				"Ref": "PIDI_cri_accesMOBI2",
+				"Type": "linkAppli",
+				"Label": "Saisir constat de dommage sur MOBI",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_PVetabli] == true"
+			},
+			{
+				"Ref": "PIDI_FI_Present",
+				"Type": "booleanInput",
+				"Label": "DI/FI présent ?",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"SectionTitle": "DIFI"
+			},
+			{
+				"Ref": "nouvelleDateHeureClient",
+				"Type": "dateTimeInput",
+				"Label": "Date et heure de prévisionnelle de finalisation client",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF'",
+				"SectionTitle": "ALEA"
+			},
+			{
+				"Ref": "PIDI_cri_IndicateurRDV",
+				"Type": "booleanInput",
+				"Label": "Indicateur RDV",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF'"
+			},
+			{
+				"Ref": "nouvelleDateHeureRDV",
+				"Type": "dateTimeInput",
+				"Label": "Date et heure du RDV",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_IndicateurRDV] == true"
+			},
+			{
+				"Ref": "nouvellenouvelleMargeRDV",
+				"Type": "singleChoice",
+				"Label": "Marge du RDV",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_IndicateurRDV] == true",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "N",
+						"Display": "N"
+					},
+					{
+						"Value": "M",
+						"Display": "M"
+					},
+					{
+						"Value": "A",
+						"Display": "A"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_rappelClient",
+				"Type": "singleChoice",
+				"Label": "Rappel client à effectuer",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "true",
+						"Display": "Oui"
+					},
+					{
+						"Value": "false",
+						"Display": "Non"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_contactClient",
+				"Type": "singleChoice",
+				"Label": "Client contacté ou rencontré",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "true",
+						"Display": "Oui"
+					},
+					{
+						"Value": "false",
+						"Display": "Non"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_modeContactClient",
+				"Type": "singleChoice",
+				"Label": "Mode de contact",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_contactClient] == 'true'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "D",
+						"Display": "Contact direct avec CRIC"
+					},
+					{
+						"Value": "T",
+						"Display": "Téléphone"
+					},
+					{
+						"Value": "M",
+						"Display": "Message"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_typeMedia",
+				"Type": "singleChoice",
+				"Label": "Type de média",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_modeContactClient] == 'M'",
+				"OptionList": [{
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "F",
+						"Display": "Fixe"
+					},
+					{
+						"Value": "M",
+						"Display": "Mobile"
+					},
+					{
+						"Value": "S",
+						"Display": "S: SMS"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_commentaireEchangeClient",
+				"Type": "singleInput",
+				"Label": "Commentaire échange client",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_cri_contactClient] == 'true'"
+			},
+			{
+				"Ref": "PIDI_cri_familleSituation",
+				"Type": "singleChoice",
+				"Label": "Famille situation",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF' || [PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO' || [PIDI_cri_codeIntervention] == 'TVC' || [PIDI_cri_codeIntervention] == 'DEF' || [PIDI_cri_codeIntervention] == 'PDC' || [PIDI_cri_codeIntervention] == 'PRO'",
+				"OptionList": [{
+					"Visibility": "[ClosingReason] == 'REPLANIF' ||( [PIDI_cri_codeIntervention] != 'ORT' && [PIDI_cri_codeIntervention] != 'PBC' && [PIDI_cri_codeIntervention] != 'REO' && [PIDI_cri_codeIntervention] != 'TVC' && [PIDI_cri_codeIntervention] != 'DEF' && [PIDI_cri_codeIntervention] != 'PDC' && [PIDI_cri_codeIntervention] != 'PRO')",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "AB",
+						"Display": "AB : Client absent"
+					},
+					{
+						"Value": "RF",
+						"Display": "RF : Report fournisseur"
+					},
+					{
+						"Value": "RV",
+						"Display": "RV : Rendez vous repris"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] != 'REPLANIF' && ([PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO')",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "BL",
+						"Display": "BL : Boucle Locale"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'REPLANIF' || ([PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'REO')",
+					"Choices": [{
+						"Value": "ET",
+						"Display": "ET : étude ou désaturation réseau"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'REPLANIF' || ([PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO')",
+					"Choices": [{
+						"Value": "MC",
+						"Display": "MC : besoin moyens, compétences ou matériels complémentaires"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'REPLANIF' || ([PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO')",
+					"Choices": [{
+						"Value": "RR",
+						"Display": "RR : réparation réseau nécessaire"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] != 'REPLANIF' && ([PIDI_cri_codeIntervention] == 'TVC' || [PIDI_cri_codeIntervention] == 'REO')",
+					"Choices": [{
+						"Value": "TC",
+						"Display": "TC : travaux à la charge du client"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_codeSituation",
+				"Type": "singleChoice",
+				"Label": "Code situation",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF' || [PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO' || [PIDI_cri_codeIntervention] == 'TVC' || [PIDI_cri_codeIntervention] == 'DEF' || [PIDI_cri_codeIntervention] == 'PDC' || [PIDI_cri_codeIntervention] == 'PRO'",
+				"OptionList": [{
+					"Visibility": "[PIDI_cri_familleSituation] == 'AB'",
+					"Choices": [{
+						"Value": "AB",
+						"Display": "AB : Client absent"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'AQ'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "AC",
+						"Display": "AC : acquittement client OK"
+					},
+					{
+						"Value": "NJ",
+						"Display": "NJ : client non joint"
+					},
+					{
+						"Value": "SP",
+						"Display": "SP : client ne sait pas"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'BL'",
+					"Choices": [{
+						"Value": "BL",
+						"Display": "BL : REO BL"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'ET'",
+					"Choices": [{
+						"Value": "ET",
+						"Display": "ET : etude sur le réseau à faire par Orange y compris génie civil"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'OKPIDI' && [PIDI_cri_codeIntervention] == 'REO' && [PIDI_cri_familleSituation] == 'MC'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "AD",
+						"Display": "AD : adresse client erronée"
+					},
+					{
+						"Value": "AI",
+						"Display": "AI : problème installation : serrure, coffret RP..."
+					},
+					{
+						"Value": "AP",
+						"Display": "AP : Approvisionnement en matériel"
+					},
+					{
+						"Value": "ES",
+						"Display": "ES : REO vers Expert Soutien"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'OKPIDI' && [PIDI_cri_familleSituation] == 'MC'",
+					"Choices": [{
+						"Value": "EL",
+						"Display": "EL : Elagage en domaine public"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'MC' && (([ClosingReason] == 'OKPIDI' && [PIDI_cri_codeIntervention] == 'REO') || [ClosingReason] == 'REPLANIF')",
+					"Choices": [{
+						"Value": "MC",
+						"Display": "MC : problème d'accès aux installations Orange"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'QQ' && [PIDI_cri_codeIntervention] == 'PRO'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "QR",
+						"Display": "QR : QRL réseau à réaliser"
+					},
+					{
+						"Value": "QC",
+						"Display": "QC : QRL client à réaliser"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'RF'",
+					"Choices": [{
+						"Value": "RF",
+						"Display": "RF : Report fournisseur"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'OKPIDI' && [PIDI_cri_familleSituation] == 'RR'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "GC",
+						"Display": "GC : génie civil en domaine public à réparer"
+					},
+					{
+						"Value": "PE",
+						"Display": "PE : Poteau inaccessible étude à faire"
+					},
+					{
+						"Value": "PO",
+						"Display": "PO : poteau à remplacer"
+					},
+					{
+						"Value": "PR",
+						"Display": "PR : Poteau inaccessible à remplacer"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'OKPIDI' && [PIDI_cri_familleSituation] == 'RR' && [PIDI_cri_codeIntervention] == 'REO'",
+					"Choices": [{
+						"Value": "TS",
+						"Display": "TS : Transfert vers CA pour process TSE (commut, dslam)"
+					},
+					{
+						"Value": "VA",
+						"Display": "VA : demande de validation des travaux par Orange"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'REPLANIF' && [PIDI_cri_familleSituation] == 'RR'",
+					"Choices": [{
+						"Value": "RR",
+						"Display": "RR : Travaux réseau Orange nécessaires"
+					}]
+				},
+				{
+					"Visibility": "[PIDI_cri_familleSituation] == 'RV'",
+					"Choices": [{
+						"Value": "RV",
+						"Display": "RV : Rendez vous repris"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'OKPIDI' && [PIDI_cri_familleSituation] == 'TC' && [PIDI_cri_codeIntervention] == 'TVC'",
+					"Choices": [{
+						"Value": " - ",
+						"Display": " - "
+					},
+					{
+						"Value": "AM",
+						"Display": "AM : présence d'amiante chez le client"
+					},
+					{
+						"Value": "CP",
+						"Display": "CP : Conduite privative"
+					},
+					{
+						"Value": "EP",
+						"Display": "EP : Elagage en partie privative"
+					},
+					{
+						"Value": "IC",
+						"Display": "IC : Problème accès aux installations client"
+					},
+					{
+						"Value": "PF",
+						"Display": "PF : Passage en faux plafond"
+					},
+					{
+						"Value": "PP",
+						"Display": "PP : problème de passage"
+					}]
+				},
+				{
+					"Visibility": "[ClosingReason] == 'REPLANIF' && [PIDI_cri_familleSituation] == 'TC'",
+					"Choices": [{
+						"Value": "TC",
+						"Display": "TC : travaux à la charge du client"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_cri_commentaireAlea",
+				"Type": "singleInput",
+				"Label": "Commentaire situation",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[ClosingReason] == 'REPLANIF' || [PIDI_cri_codeIntervention] == 'ORT' || [PIDI_cri_codeIntervention] == 'PBC' || [PIDI_cri_codeIntervention] == 'REO' || [PIDI_cri_codeIntervention] == 'TVC' || [PIDI_cri_codeIntervention] == 'DEF' || [PIDI_cri_codeIntervention] == 'PDC' || [PIDI_cri_codeIntervention] == 'PRO'"
+			}]
+		},
+		{
+			"Title": "SAV+ CONTRADICTOIRE",
+			"Visibility": "[PIDI_CRI_savpluscontradictoire] == true",
+			"Fields": [{
+				"Ref": "PIDI_crf_essaiLbe",
+				"Type": "booleanInput",
+				"Label": "Essai LBE",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "pidi_cri_crf_ddtia",
+				"Type": "singleInput",
+				"Label": "DTI avant SAV+",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true",
+				"SectionTitle": "Mesures DOWN (uniquement des données numériques + ou -)"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_reApresDOWN",
+				"Type": "singleInput",
+				"Label": "RE après SAV+",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_SRApresDOWN",
+				"Type": "singleInput",
+				"Label": "SR après SAV+",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_pcApresDOWN",
+				"Type": "singleInput",
+				"Label": "PC après SAV+",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_dtiApresDOWN",
+				"Type": "singleInput",
+				"Label": "DTI après SAV+",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_dtiAvantUP",
+				"Type": "singleInput",
+				"Label": "DTI avant SAV+",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true",
+				"SectionTitle": "Mesures UP (uniquement des données numériques + ou -)"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_reApresUP",
+				"Type": "singleInput",
+				"Label": "RE après SAV+",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_srApresUP",
+				"Type": "singleInput",
+				"Label": "SR après SAV+",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_dtiApresUP",
+				"Type": "singleInput",
+				"Label": "DTI après SAV+",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_pcApresUP",
+				"Type": "singleInput",
+				"Label": "PC après SAV+",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Visibility": "[PIDI_CRI_essaiLBE] == true"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_nPinceEssai",
+				"Type": "singleInput",
+				"Label": "N° pince essai",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"SectionTitle": "Formulaire"
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_heureEssai",
+				"Type": "timeInput",
+				"Label": "Heure essai",
+				"IsMandatory": true,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_resultatEssai",
+				"Type": "singleChoice",
+				"Label": "Résultat essai",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"OptionList": [{
+					"Choices": [{
+						"Value": "- ",
+						"Display": "- "
+					},
+					{
+						"Value": "LBEOK",
+						"Display": "LBE OK"
+					},
+					{
+						"Value": "LBEKO",
+						"Display": "LBE KO"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_commentaireOrange",
+				"Type": "singleInput",
+				"Label": "Commentaire Orange",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_commentaireOPT",
+				"Type": "singleInput",
+				"Label": "Commentaire OPT",
+				"IsMandatory": false,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_nomTechnicienOrange",
+				"Type": "singleInput",
+				"Label": "Nom technicien Orange",
+				"IsMandatory": true,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_signatureTechOrange",
+				"Type": "signatureInput",
+				"Label": "Signature technicien Orange",
+				"IsMandatory": true,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_nomTechOPT",
+				"Type": "singleInput",
+				"Label": "Nom technicien OPT",
+				"IsMandatory": true,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_signTechOPT",
+				"Type": "signatureInput",
+				"Label": "Signature technicien OPT",
+				"IsMandatory": true,
+				"IsReadonly": false
+			},
+			{
+				"Ref": "PIDI_SAVPLUS_dateHeureRDV",
+				"Type": "dateTimeInput",
+				"Label": "Date et heure de rdv",
+				"IsMandatory": false,
+				"IsReadonly": false
+			}]
+		},
+		{
+			"Title": "DI/FI",
+			"Visibility": "[PIDI_FI_Present] == true",
+			"Fields": [{
+				"Ref": "PIDI_FI_qualifLiaisonDateHeure",
+				"Type": "dateTimeInput",
+				"Label": "Date",
+				"IsMandatory": false,
+				"IsReadonly": false,
+				"Tooltip": "Saisir la date et l'heure de l'intervention",
+				"SectionTitle": "Qualification de la ligne"
+			},
+			{
+				"Ref": "PIDI_FI_contactClient",
+				"Type": "telInput",
+				"Label": "Contact Client",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Saisir le numéro de téléphone du client"
+			},
+			{
+				"Ref": "PIDI_FI_nomClient",
+				"Type": "singleInput",
+				"Label": "Nom Client",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Saisir le nom du client"
+			},
+			{
+				"Ref": "PIDI_FI_prestationContratId",
+				"Type": "catalogInput",
+				"Label": "Prestation",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Selectionner la prestation effectuée",
+				"CatalogServiceFilter": "VE",
+				"CatalogPriceDisplay": false
+			},
+			{
+				"Ref": "PIDI_FI_motifFacturation",
+				"Type": "singleChoice",
+				"Label": "Motif facturation",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"Tooltip": "Selectionner le motif de facturation",
+				"OptionList": [{
+					"Choices": [{
+						"Value": "0",
+						"Display": "Desserte interne defectueuse"
+					},
+					{
+						"Value": "1",
+						"Display": "Desserte câblée absente"
+					},
+					{
+						"Value": "2",
+						"Display": "Client absent"
+					},
+					{
+						"Value": "3",
+						"Display": "Autre"
+					}]
+				}]
+			},
+			{
+				"Ref": "PIDI_FI_VE",
+				"Type": "catalogInput",
+				"Label": "VE",
+				"IsMandatory": true,
+				"IsReadonly": false,
+				"CatalogServiceFilter": "VE",
+				"CatalogPriceDisplay": false
+			}]
+		}]
+	},
+	{
+		"Key": "TamConsultation",
+		"Title": "Test TAM",
+		"SubCategories" : []
+	}
+	],
+	"ValidationRules": []
+}
