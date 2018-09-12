@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+//go:generate go build -o ../formctrl.exe
+
 var filename string
 var output string
 var outf *os.File
