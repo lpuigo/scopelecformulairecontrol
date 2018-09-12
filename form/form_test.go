@@ -1,25 +1,15 @@
 package form
 
 import (
-	"encoding/json"
-	"os"
 	"testing"
 )
 
 const Form1 string = `C:\Users\Laurent\Golang\src\github.com\lpuig\scopelecformulairecontrol\form\test\PCCDGT.json`
 
 func Test_FormMarshall(t *testing.T) {
-	f, err := os.Open(Form1)
+	myForm, err := NewFormModelFromFile(Form1)
 	if err != nil {
 		t.Fatal(err)
-	}
-	defer f.Close()
-
-	var myForm FormModel
-
-	err = json.NewDecoder(f).Decode(&myForm)
-	if err != nil {
-		t.Fatal("could not decode form", err)
 	}
 
 	for ic, c := range myForm.Categories {

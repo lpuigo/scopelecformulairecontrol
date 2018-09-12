@@ -1,6 +1,11 @@
 package form
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+)
 
 type FormModel struct {
 	Categories []struct {
@@ -102,3 +107,65 @@ const (
 	FT_catalogInput       FieldType = "catalogInput"
 	FT_tamTestsInput      FieldType = "tamTestsInput"
 )
+
+func NewFormModelFromFile(file string) (*FormModel, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	myForm := &FormModel{}
+
+	err = json.NewDecoder(f).Decode(myForm)
+	if err != nil {
+		return nil, fmt.Errorf("could not decode form %v", err)
+	}
+	return myForm, nil
+}
+
+func outString(pos, typ, ref, label, mandatory, readonly string) string {
+	return fmt.Sprintf("%s;%s;%s;%s;%s;%s\n", pos, typ, ref, label, mandatory, readonly)
+}
+
+func mandatory(b bool) string {
+	switch b {
+	case true:
+		return "Obligatoire"
+	default:
+		return "Facultatif"
+	}
+}
+
+func readonly(b bool) string {
+	switch b {
+	case true:
+		return "Lecture"
+	default:
+		return "Lecture/Ecriture"
+	}
+}
+
+func (f FormModel) OutString(w io.Writer) {
+	for ic, c := range f.Categories {
+		w.Write([]byte(outString(fmt.Sprintf("%d", ic),
+			"Categorie", c.Key, c.Title,
+			"",
+			"",
+		)))
+		for isc, s := range c.SubCategories {
+			w.Write([]byte(outString(fmt.Sprintf("%d-%d", ic, isc),
+				"Sous-Categorie", s.Key, s.Title,
+				"",
+				"",
+			)))
+			for ifield, field := range s.Fields {
+				w.Write([]byte(outString(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
+					field.Type, field.Ref, field.Label,
+					mandatory(field.IsMandatory),
+					readonly(field.IsReadonly),
+				)))
+			}
+		}
+	}
+}
