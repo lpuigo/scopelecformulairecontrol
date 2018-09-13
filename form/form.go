@@ -1,6 +1,7 @@
 package form
 
 import (
+	csv2 "encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -140,9 +141,9 @@ func mandatory(b bool) string {
 func readonly(b bool) string {
 	switch b {
 	case true:
-		return "Lecture"
+		return "L"
 	default:
-		return "Lecture/Ecriture"
+		return "L+E"
 	}
 }
 
@@ -165,6 +166,41 @@ func (f FormModel) OutString(w io.Writer) {
 					mandatory(field.IsMandatory),
 					readonly(field.IsReadonly),
 				)))
+			}
+		}
+	}
+}
+
+func outCSV(pos, typ, ref, label, mandatory, readonly, section string) []string {
+	return []string{pos, typ, ref, label, mandatory, readonly, section}
+}
+
+func (f FormModel) OutCSV(w io.Writer) {
+	csv := csv2.NewWriter(w)
+	csv.Comma = ';'
+	defer csv.Flush()
+
+	for ic, c := range f.Categories {
+		csv.Write(outCSV(fmt.Sprintf("%d", ic),
+			"Categorie", c.Key, c.Title,
+			"",
+			"",
+			"",
+		))
+		for isc, s := range c.SubCategories {
+			csv.Write(outCSV(fmt.Sprintf("%d-%d", ic, isc),
+				"Sous-Categorie", s.Key, s.Title,
+				"",
+				"",
+				"",
+			))
+			for ifield, field := range s.Fields {
+				csv.Write(outCSV(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
+					field.Type, field.Ref, field.Label,
+					mandatory(field.IsMandatory),
+					readonly(field.IsReadonly),
+					field.SectionTitle,
+				))
 			}
 		}
 	}

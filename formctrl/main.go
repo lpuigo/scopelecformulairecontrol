@@ -8,6 +8,7 @@ import (
 )
 
 //go:generate go build -o ../formctrl.exe
+//go:generate bash make32.sh
 
 var filename string
 var output string
@@ -33,5 +34,5 @@ func main() {
 		defer outf.Close()
 	}
 
-	model.OutString(outf)
+	model.OutCSV(outf)
 }
