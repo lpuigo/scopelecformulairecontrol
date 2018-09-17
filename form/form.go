@@ -4,6 +4,7 @@ import (
 	csv2 "encoding/csv"
 	"encoding/json"
 	"fmt"
+	"github.com/tealeg/xlsx"
 	"io"
 	"os"
 )
@@ -147,7 +148,7 @@ func readonly(b bool) string {
 	}
 }
 
-func (f FormModel) OutString(w io.Writer) {
+func (f FormModel) WriteString(w io.Writer) {
 	for ic, c := range f.Categories {
 		w.Write([]byte(outString(fmt.Sprintf("%d", ic),
 			"Categorie", c.Key, c.Title,
@@ -175,7 +176,7 @@ func outCSV(pos, typ, ref, label, mandatory, readonly, section string) []string 
 	return []string{pos, typ, ref, label, mandatory, readonly, section}
 }
 
-func (f FormModel) OutCSV(w io.Writer) {
+func (f FormModel) WriteCSV(w io.Writer) {
 	csv := csv2.NewWriter(w)
 	csv.Comma = ';'
 	defer csv.Flush()
@@ -204,4 +205,68 @@ func (f FormModel) OutCSV(w io.Writer) {
 			}
 		}
 	}
+}
+
+func xlsHeader(s *xlsx.Sheet) {
+	xlsRow(s,
+		"Position",
+		"Type",
+		"Ref",
+		"Label",
+		"IsMandatory",
+		"IsReadonly",
+		"SectionTitle",
+		"VisibilityRule",
+	)
+}
+
+func xlsRow(s *xlsx.Sheet, pos, typ, ref, label, mandatory, readonly, section, visibility string) {
+	r := s.AddRow()
+	for _, str := range []string{pos, typ, ref, label, mandatory, readonly, section, visibility} {
+		c := r.AddCell()
+		c.SetString(str)
+	}
+}
+
+func (f FormModel) WriteXLS(w io.Writer) error {
+	xlsFile := xlsx.NewFile()
+	sheet, err := xlsFile.AddSheet("Form")
+	if err != nil {
+		return err
+	}
+	xlsHeader(sheet)
+
+	for ic, c := range f.Categories {
+		xlsRow(sheet, fmt.Sprintf("%d", ic),
+			"Categorie", c.Key, c.Title,
+			"",
+			"",
+			"",
+			"",
+		)
+		for isc, s := range c.SubCategories {
+			xlsRow(sheet, fmt.Sprintf("%d-%d", ic, isc),
+				"Sous-Categorie", s.Key, s.Title,
+				"",
+				"",
+				"",
+				s.Visibility,
+			)
+			for ifield, field := range s.Fields {
+				xlsRow(sheet, fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
+					field.Type, field.Ref, field.Label,
+					mandatory(field.IsMandatory),
+					readonly(field.IsReadonly),
+					field.SectionTitle,
+					field.Visibility,
+				)
+			}
+		}
+	}
+
+	err = xlsFile.Write(w)
+	if err != nil {
+		return err
+	}
+	return nil
 }
