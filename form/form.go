@@ -34,28 +34,24 @@ func (s SubCategory) String() string {
 }
 
 type Field struct {
-	Ref             string   `json:"Ref"`                       // Référence permettant d'identifier un champ
-	Type            string   `json:"Type"`                      // Type du champ
-	Label           string   `json:"Label"`                     // Libellé associé au champ
-	Label2          string   `json:"Label2,omitempty"`          // Libellé associé au champ (utilisé pour certains champs
-	Label3          string   `json:"Label3,omitempty"`          // Libellé associé au champ (utilisé pour certains champs
-	Visibility      string   `json:"Visibility,omitempty"`      // Règle de visibilité permettant d'afficher/masquer le champ
-	Tooltip         string   `json:"Tooltip,omitempty"`         // Affiche un \"?\" en bout de ligne et affiche le contenu dans un tooltip au click du \"?\"\"
-	Placeholder     string   `json:"Placeholder,omitempty"`     // Valeur affiché par défaut (valable que pour les champs libres de type text)
-	IsMandatory     bool     `json:"IsMandatory,omitempty"`     // Interdit que le champ soit vide (affiche une *)
-	IsMandatoryExpr string   `json:"IsMandatoryExpr,omitempty"` // Idem, mais sur la base d'une expression à évaluer
-	MessErrRequired string   `json:"MessErrRequired,omitempty"` // Message d'erreur affiché si le champ est vide
-	IsReadonly      bool     `json:"IsReadonly"`                // Le champ n'est pas modifiable
-	Href            string   `json:"Href,omitempty"`            // Lien hypertext pour les champs de type link ou linkAppli
-	Regexp          string   `json:"Regexp,omitempty"`          // Règle de validation des champs texte sous forme d'expression régulière
-	MessErrRegexp   string   `json:"MessErrRegexp,omitempty"`   // Message d'erreur affiché si le champ ne respecte pas Regexp
-	SectionTitle    string   `json:"SectionTitle,omitempty"`    // Affiche un titre au dessus d'un champ. La règle de visibilité n'affecte pas le titre de la section.
-	DefaultValue    struct { // Description d'une valeur par défaut. Une seule valeur possible (oneOf pas supporté par swagger v2).
-		Static                   string `json:"Static,omitempty"`                   // Valeur en dur dans le format attendu par le type du champ
-		OriginatorWorkOrderQuery string `json:"OriginatorWorkOrderQuery,omitempty"` // Requête xpath 1.0 appliqué sur l'OT brut provenant du canal donneur d'ordre
-		WorkOrderQuery           string `json:"WorkOrderQuery,omitempty"`           // Requête jsonpath appliqué sur l'OT Planning. Voir le format de l'objet retourné par ApiWorkOrderByIdGetAsync
-	} `json:"DefaultValue,omitempty"`
-	Quality struct { // Information de classification qualité du champ (non géré par le moteur de rendu)
+	Ref             string           `json:"Ref"`                       // Référence permettant d'identifier un champ
+	Type            string           `json:"Type"`                      // Type du champ
+	Label           string           `json:"Label"`                     // Libellé associé au champ
+	Label2          string           `json:"Label2,omitempty"`          // Libellé associé au champ (utilisé pour certains champs
+	Label3          string           `json:"Label3,omitempty"`          // Libellé associé au champ (utilisé pour certains champs
+	Visibility      string           `json:"Visibility,omitempty"`      // Règle de visibilité permettant d'afficher/masquer le champ
+	Tooltip         string           `json:"Tooltip,omitempty"`         // Affiche un \"?\" en bout de ligne et affiche le contenu dans un tooltip au click du \"?\"\"
+	Placeholder     string           `json:"Placeholder,omitempty"`     // Valeur affiché par défaut (valable que pour les champs libres de type text)
+	IsMandatory     bool             `json:"IsMandatory,omitempty"`     // Interdit que le champ soit vide (affiche une *)
+	IsMandatoryExpr string           `json:"IsMandatoryExpr,omitempty"` // Idem, mais sur la base d'une expression à évaluer
+	MessErrRequired string           `json:"MessErrRequired,omitempty"` // Message d'erreur affiché si le champ est vide
+	IsReadonly      bool             `json:"IsReadonly"`                // Le champ n'est pas modifiable
+	Href            string           `json:"Href,omitempty"`            // Lien hypertext pour les champs de type link ou linkAppli
+	Regexp          string           `json:"Regexp,omitempty"`          // Règle de validation des champs texte sous forme d'expression régulière
+	MessErrRegexp   string           `json:"MessErrRegexp,omitempty"`   // Message d'erreur affiché si le champ ne respecte pas Regexp
+	SectionTitle    string           `json:"SectionTitle,omitempty"`    // Affiche un titre au dessus d'un champ. La règle de visibilité n'affecte pas le titre de la section.
+	DefaultValue    DefaultValueType `json:"DefaultValue,omitempty"`    // Description d'une valeur par défaut. Une seule valeur possible (oneOf pas supporté par swagger v2).
+	Quality         struct {         // Information de classification qualité du champ (non géré par le moteur de rendu)
 		Ref string `json:"Ref"`
 	} `json:"Quality,omitempty"`
 	PidiLineTestType      []int      `json:"PidiLineTestType,omitempty"`      // Permet de sélectionner les essais mis à disposition
@@ -79,6 +75,23 @@ type Field struct {
 	MaxItem  int     `json:"MaxItem,omitempty"`  // Nombre maximum d'élément dans le groupe de champs itemlist
 	MinLevel int     `json:"MinLevel,omitempty"` // niveau technicien minimum inclus nécessaire pour voir le champs
 	MaxLevel int     `json:"MaxLevel,omitempty"` // niveau technicien minimum inclus nécessaire pour voir le champs
+}
+
+type DefaultValueType struct {
+	Static                   string `json:"Static,omitempty"`                   // Valeur en dur dans le format attendu par le type du champ
+	OriginatorWorkOrderQuery string `json:"OriginatorWorkOrderQuery,omitempty"` // Requête xpath 1.0 appliqué sur l'OT brut provenant du canal donneur d'ordre
+	WorkOrderQuery           string `json:"WorkOrderQuery,omitempty"`           // Requête jsonpath appliqué sur l'OT Planning. Voir le format de l'objet retourné par ApiWorkOrderByIdGetAsync
+}
+
+func (v DefaultValueType) String() string {
+	if v.Static != "" {
+		return "Static: " + v.Static
+	} else if v.OriginatorWorkOrderQuery != "" {
+		return "OriginatorWorkOrderQuery: " + v.OriginatorWorkOrderQuery
+	} else if v.WorkOrderQuery != "" {
+		return "WorkOrderQuery: " + v.WorkOrderQuery
+	}
+	return ""
 }
 
 type FieldType string
@@ -217,12 +230,13 @@ func xlsHeader(s *xlsx.Sheet) {
 		"IsReadonly",
 		"SectionTitle",
 		"VisibilityRule",
+		"DefaultValue",
 	)
 }
 
-func xlsRow(s *xlsx.Sheet, pos, typ, ref, label, mandatory, readonly, section, visibility string) {
+func xlsRow(s *xlsx.Sheet, pos, typ, ref, label, mandatory, readonly, section, visibility, defaultvalue string) {
 	r := s.AddRow()
-	for _, str := range []string{pos, typ, ref, label, mandatory, readonly, section, visibility} {
+	for _, str := range []string{pos, typ, ref, label, mandatory, readonly, section, visibility, defaultvalue} {
 		c := r.AddCell()
 		c.SetString(str)
 	}
@@ -243,6 +257,7 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 			"",
 			"",
 			"",
+			"",
 		)
 		for isc, s := range c.SubCategories {
 			xlsRow(sheet, fmt.Sprintf("%d-%d", ic, isc),
@@ -251,6 +266,7 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 				"",
 				"",
 				s.Visibility,
+				"",
 			)
 			for ifield, field := range s.Fields {
 				xlsRow(sheet, fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
@@ -259,6 +275,7 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 					readonly(field.IsReadonly),
 					field.SectionTitle,
 					field.Visibility,
+					field.DefaultValue.String(),
 				)
 			}
 		}
