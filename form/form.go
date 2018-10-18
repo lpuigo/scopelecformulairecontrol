@@ -1,7 +1,7 @@
 package form
 
 import (
-	csv2 "encoding/csv"
+	csv "encoding/csv"
 	"encoding/json"
 	"fmt"
 	"github.com/tealeg/xlsx"
@@ -78,14 +78,14 @@ type Field struct {
 }
 
 type DefaultValueType struct {
-	Static                   string `json:"Static,omitempty"`                   // Valeur en dur dans le format attendu par le type du champ
-	OriginatorWorkOrderQuery string `json:"OriginatorWorkOrderQuery,omitempty"` // Requête xpath 1.0 appliqué sur l'OT brut provenant du canal donneur d'ordre
-	WorkOrderQuery           string `json:"WorkOrderQuery,omitempty"`           // Requête jsonpath appliqué sur l'OT Planning. Voir le format de l'objet retourné par ApiWorkOrderByIdGetAsync
+	Static                   interface{} `json:"Static,omitempty"`                   // Valeur en dur dans le format attendu par le type du champ
+	OriginatorWorkOrderQuery string      `json:"OriginatorWorkOrderQuery,omitempty"` // Requête xpath 1.0 appliqué sur l'OT brut provenant du canal donneur d'ordre
+	WorkOrderQuery           string      `json:"WorkOrderQuery,omitempty"`           // Requête jsonpath appliqué sur l'OT Planning. Voir le format de l'objet retourné par ApiWorkOrderByIdGetAsync
 }
 
 func (v DefaultValueType) String() string {
-	if v.Static != "" {
-		return "Static: " + v.Static
+	if v.Static != nil {
+		return fmt.Sprintf("Static: %v", v.Static)
 	} else if v.OriginatorWorkOrderQuery != "" {
 		return "OriginatorWorkOrderQuery: " + v.OriginatorWorkOrderQuery
 	} else if v.WorkOrderQuery != "" {
@@ -190,26 +190,26 @@ func outCSV(pos, typ, ref, label, mandatory, readonly, section string) []string 
 }
 
 func (f FormModel) WriteCSV(w io.Writer) {
-	csv := csv2.NewWriter(w)
-	csv.Comma = ';'
-	defer csv.Flush()
+	csvw := csv.NewWriter(w)
+	csvw.Comma = ';'
+	defer csvw.Flush()
 
 	for ic, c := range f.Categories {
-		csv.Write(outCSV(fmt.Sprintf("%d", ic),
+		csvw.Write(outCSV(fmt.Sprintf("%d", ic),
 			"Categorie", c.Key, c.Title,
 			"",
 			"",
 			"",
 		))
 		for isc, s := range c.SubCategories {
-			csv.Write(outCSV(fmt.Sprintf("%d-%d", ic, isc),
+			csvw.Write(outCSV(fmt.Sprintf("%d-%d", ic, isc),
 				"Sous-Categorie", s.Key, s.Title,
 				"",
 				"",
 				"",
 			))
 			for ifield, field := range s.Fields {
-				csv.Write(outCSV(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
+				csvw.Write(outCSV(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
 					field.Type, field.Ref, field.Label,
 					mandatory(field.IsMandatory),
 					readonly(field.IsReadonly),
