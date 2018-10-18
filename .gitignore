@@ -13,3 +13,6 @@
 
 # Idea project directory
 .idea/
+
+# json test files
+test/*.json
