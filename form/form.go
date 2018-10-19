@@ -55,6 +55,7 @@ type Field struct {
 		Ref string `json:"Ref"`
 	} `json:"Quality,omitempty"`
 	PidiLineTestType      []int      `json:"PidiLineTestType,omitempty"`      // Permet de sélectionner les essais mis à disposition
+	PidiLineTestOperator  []string   `json:"PidiLineTestOperator,omitempty"`  // Permet de sélectionner les essais mis à disposition
 	CatalogServiceFilter  string     `json:"CatalogServiceFilter,omitempty"`  // Concerne le type catalogInput. Valeur du filtre affecté par défaut (code famille de prestation)
 	CatalogMaterialFilter string     `json:"CatalogMaterialFilter,omitempty"` // Concerne le type catalogInput. Valeur du filtre affecté par défaut (code famille de matériel)
 	CatalogPriceDisplay   bool       `json:"CatalogPriceDisplay,omitempty"`   // Concerne le type catalogInput. Permet d'indiquer si les prix totaux sont affichés dans le composant côté application mobile
