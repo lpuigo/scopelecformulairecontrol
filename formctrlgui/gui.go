@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/lpuig/scopelecformulairecontrol/form"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,7 +18,7 @@ type GuiContext struct {
 
 func main() {
 	gc := GuiContext{}
-	MainWindow{
+	_, err := MainWindow{
 		Title:   "SPRINT Formulaire Controler",
 		MinSize: Size{320, 240},
 		Layout:  VBox{},
@@ -25,14 +26,18 @@ func main() {
 			gc.GenXLSX(files)
 		},
 		Children: []Widget{
+			Label{Text: "Glisser un formulaire JSON ici ..."},
 			TextEdit{
-				AssignTo:  &gc.textEdit,
-				ReadOnly:  true,
-				Text:      "Glisser un formulaire JSON ici ...",
-				Alignment: AlignCenter,
+				AssignTo: &gc.textEdit,
+				ReadOnly: true,
+				//Text:      "Glisser un formulaire JSON ici ...",
+				//Alignment: AlignCenter,
 			},
 		},
 	}.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func outputfile(filename string) string {

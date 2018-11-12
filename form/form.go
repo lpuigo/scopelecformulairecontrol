@@ -1,12 +1,13 @@
 package form
 
 import (
-	csv "encoding/csv"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"github.com/tealeg/xlsx"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -77,6 +78,10 @@ type Field struct {
 	MaxItem  int     `json:"MaxItem,omitempty"`  // Nombre maximum d'élément dans le groupe de champs itemlist
 	MinLevel int     `json:"MinLevel,omitempty"` // niveau technicien minimum inclus nécessaire pour voir le champs
 	MaxLevel int     `json:"MaxLevel,omitempty"` // niveau technicien minimum inclus nécessaire pour voir le champs
+
+	BlockFields []Field `json:"BlockFields,omitempty"` // Pour le type block (editeur de formulaire)
+	Name        string  `json:"Name,omitempty"`        // Nom du Block pour les Fields de type Block (editeur de formulaire)
+	Version     int     `json:"Version,omitempty"`     // Version du Block pour les Fields de type Block (editeur de formulaire)
 }
 
 type DefaultValueType struct {
@@ -99,6 +104,7 @@ func (v DefaultValueType) String() string {
 type FieldType string
 
 const (
+	FT_Block              FieldType = "block"
 	FT_address            FieldType = "address"
 	FT_booleanInput       FieldType = "booleanInput"
 	FT_cascadeChoice      FieldType = "cascadeChoice"
@@ -250,25 +256,7 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 			)
 			xs.rowColor("00000000", "0051cdff")
 
-			for ifield, field := range s.Fields {
-				xs.xlsRow(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
-					field.Type, field.Ref, field.Label,
-					mandatory(field.IsMandatory),
-					readonly(field.IsReadonly),
-					field.SectionTitle,
-					field.Visibility,
-					field.DefaultValue.String(),
-				)
-				if strings.HasPrefix(field.Ref, "PIDI_") {
-					xs.r.Cells[2].GetStyle().Font.Bold = true
-				}
-				if field.IsMandatory {
-					xs.cellColor(4, "00a80000")
-				}
-				if field.IsReadonly {
-					xs.cellColor(5, "00a80000")
-				}
-			}
+			writeFields(w, xs, s.Fields, ic, isc, 0)
 		}
 	}
 
@@ -277,6 +265,46 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+func writeFields(w io.Writer, xs *XLSSheet, fields []Field, ic, isc, ifield int) int {
+	for _, field := range fields {
+		switch field.Type {
+		case string(FT_Block):
+			xs.xlsRow("",
+				field.Type, field.Name, "v"+strconv.Itoa(field.Version),
+				"",
+				"",
+				"",
+				"",
+				"",
+			)
+			xs.rowColor("00000000", "00b2ffb2")
+
+			ifield = writeFields(w, xs, field.BlockFields, ic, isc, ifield)
+
+		default:
+			xs.xlsRow(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
+				field.Type, field.Ref, field.Label,
+				mandatory(field.IsMandatory),
+				readonly(field.IsReadonly),
+				field.SectionTitle,
+				field.Visibility,
+				field.DefaultValue.String(),
+			)
+			if strings.HasPrefix(field.Ref, "PIDI_") {
+				xs.r.Cells[2].GetStyle().Font.Bold = true
+			}
+			if field.IsMandatory {
+				xs.cellColor(4, "00a80000")
+			}
+			if field.IsReadonly {
+				xs.cellColor(5, "00a80000")
+			}
+			ifield += 1
+		}
+	}
+	return ifield
 }
 
 type XLSSheet struct {
