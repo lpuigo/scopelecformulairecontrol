@@ -71,8 +71,11 @@ func (gc GuiContext) GenXLSX(filenames []string) {
 			}
 			newText := "Résultat : " + resFilename + "\r\n"
 			gc.textEdit.AppendText(newText)
-
-			gc.blockEdit.AppendText(strings.Join(bl.Strings(file+"\t"), "\r\n") + "\r\n")
+			if len(bl) == 0 {
+				gc.blockEdit.AppendText(file + "\t<NO_BLOCK>\r\n")
+			} else {
+				gc.blockEdit.AppendText(strings.Join(bl.Strings(file+"\t"), "\r\n") + "\r\n")
+			}
 		}
 	}
 }
