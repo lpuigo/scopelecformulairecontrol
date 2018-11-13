@@ -2,16 +2,18 @@ package form
 
 import (
 	"fmt"
+	"github.com/lpuig/scopelecformulairecontrol/blocklist"
 	"github.com/tealeg/xlsx"
 	"io"
 	"strconv"
 	"strings"
 )
 
-func (f FormModel) WriteXLS(w io.Writer) error {
+func (f FormModel) WriteXLS(w io.Writer) (bl blocklist.BlockDescList, err error) {
+	bl = blocklist.MakeBlockDescList()
 	xs, err := NewXLSSheet()
 	if err != nil {
-		return err
+		return
 	}
 	xs.xlsHeader()
 
@@ -36,18 +38,19 @@ func (f FormModel) WriteXLS(w io.Writer) error {
 			)
 			xs.rowColor("00000000", "0051cdff")
 
-			writeFields(w, xs, s.Fields, ic, isc, 0)
+			writeFields(w, xs, s.Fields, ic, isc, 0, bl)
 		}
 	}
 
 	err = xs.f.Write(w)
 	if err != nil {
-		return err
+		return
 	}
-	return nil
+	return
 }
 
-func writeFields(w io.Writer, xs *XLSSheet, fields []Field, ic, isc, ifield int) int {
+func writeFields(w io.Writer, xs *XLSSheet, fields []Field, ic, isc, ifield int, bl blocklist.BlockDescList) int {
+
 	for _, field := range fields {
 		switch field.Type {
 		case string(FT_Block):
@@ -60,8 +63,9 @@ func writeFields(w io.Writer, xs *XLSSheet, fields []Field, ic, isc, ifield int)
 				"",
 			)
 			xs.rowColor("00000000", "00b2ffb2")
+			bl.Add(field.Name, field.Version)
 
-			ifield = writeFields(w, xs, field.BlockFields, ic, isc, ifield)
+			ifield = writeFields(w, xs, field.BlockFields, ic, isc, ifield, bl)
 
 		default:
 			xs.xlsRow(fmt.Sprintf("%d-%d-%d", ic, isc, ifield),
